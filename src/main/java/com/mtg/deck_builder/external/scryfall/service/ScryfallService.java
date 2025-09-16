@@ -18,6 +18,6 @@ public class ScryfallService {
 
     public List<Card> searchCards(String query) {
         List<ScryfallCardDto> dto = client.searchCards(query);
-        return CardMapper.toDomainList(dto);
+        return CardMapper.fromScryfallCardDtoToDomainList(dto);
     }
 }

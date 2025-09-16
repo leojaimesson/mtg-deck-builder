@@ -15,7 +15,11 @@ public class ScryfallClient {
     private final WebClient webClient;
 
     public ScryfallClient(WebClient.Builder builder) {
-        this.webClient = builder.baseUrl("https://api.scryfall.com").defaultHeader("User-Agent", "DeckBuilderApp/1.0").build();
+        this.webClient = builder
+                .baseUrl("https://api.scryfall.com")
+                .defaultHeader("User-Agent", "DeckBuilderApp/1.0")
+                .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(50 * 1024 * 1024))
+                .build();
     }
 
     public List<ScryfallCardDto> searchCards(String query) {

@@ -1,86 +1,51 @@
 package com.mtg.deck_builder.cards.entitie;
 
+import jakarta.persistence.*;
 import java.util.List;
 
+@Entity
+@Table(name = "cards")
 public class Card {
-    private final String id;
-    private final String scryfallId;
 
-    private final String name;
-    private final String description;
-    private final String type;
-    private final String manaCost;
-    private final String totalManaCost;
-    private final String power;
-    private final String toughness;
-    private final List<String> colors;
-    private final List<String> colorIdentity;
-    private final String rarity;
-    private final String artist;
+    @Id
+    private String id;
 
-    private final Images images;
+    @Column(name = "scryfall_id")
+    private String scryfallId;
 
-    public String getId() {
-        return id;
+    private String name;
+    private String description;
+    private String type;
+
+    @Column(name = "mana_cost")
+    private String manaCost;
+
+    @Column(name = "total_mana_cost")
+    private String totalManaCost;
+    private String power;
+    private String toughness;
+
+    @ElementCollection
+    @CollectionTable(name = "card_colors", joinColumns = @JoinColumn(name = "card_id"))
+    @Column(name = "color")
+    private List<String> colors;
+
+    @ElementCollection
+    @CollectionTable(name = "card_color_identity", joinColumns = @JoinColumn(name = "card_id"))
+    @Column(name = "color_identity")
+    private List<String> colorIdentity;
+
+    private String rarity;
+    private String artist;
+
+    @Embedded
+    private Images images;
+
+    @OneToMany(mappedBy = "card", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Face> faces;
+
+    protected Card() {
     }
-
-    public String getScryfallId() {
-        return scryfallId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public String getManaCost() {
-        return manaCost;
-    }
-
-    public String getTotalManaCost() {
-        return totalManaCost;
-    }
-
-    public String getPower() {
-        return power;
-    }
-
-    public String getToughness() {
-        return toughness;
-    }
-
-    public List<String> getColors() {
-        return colors;
-    }
-
-    public List<String> getColorIdentity() {
-        return colorIdentity;
-    }
-
-    public String getRarity() {
-        return rarity;
-    }
-
-    public String getArtist() {
-        return artist;
-    }
-
-    public Images getImages() {
-        return images;
-    }
-
-    public List<Face> getFaces() {
-        return faces;
-    }
-
-    private final List<Face> faces;
 
     private Card(Builder builder) {
         this.id = builder.id;
@@ -99,6 +64,22 @@ public class Card {
         this.images = builder.images;
         this.faces = builder.faces;
     }
+
+    public String getId() { return id; }
+    public String getScryfallId() { return scryfallId; }
+    public String getName() { return name; }
+    public String getDescription() { return description; }
+    public String getType() { return type; }
+    public String getManaCost() { return manaCost; }
+    public String getTotalManaCost() { return totalManaCost; }
+    public String getPower() { return power; }
+    public String getToughness() { return toughness; }
+    public List<String> getColors() { return colors; }
+    public List<String> getColorIdentity() { return colorIdentity; }
+    public String getRarity() { return rarity; }
+    public String getArtist() { return artist; }
+    public Images getImages() { return images; }
+    public List<Face> getFaces() { return faces; }
 
     public static Builder builder() {
         return new Builder();
@@ -137,6 +118,8 @@ public class Card {
         public Builder images(Images images) { this.images = images; return this; }
         public Builder faces(List<Face> faces) { this.faces = faces; return this; }
 
-        public Card build() { return new Card(this); }
+        public Card build() {
+            return new Card(this);
+        }
     }
 }
