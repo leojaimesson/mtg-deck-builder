@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: deck-builder
+  datasource:
+    url: jdbc:sqlite:deck_builder_db.sqlite
+    driver-class-name: org.sqlite.JDBC
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.community.dialect.SQLiteDialect
