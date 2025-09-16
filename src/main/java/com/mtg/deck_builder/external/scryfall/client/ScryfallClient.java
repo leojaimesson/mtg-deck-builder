@@ -23,24 +23,33 @@ public class ScryfallClient {
     }
 
     public List<ScryfallCardDto> searchCards(String query) {
-        log.info("[SCRYFALL CLIENT] - Searching Scryfall API with query='{}'", query);
+        log.info("[SCRYFALL CLIENT] === Starting search on Scryfall API ===");
+        log.info("[SCRYFALL CLIENT] Query: '{}'", query);
+        long startTime = System.currentTimeMillis();
 
         try {
-            ScryfallSearchResponse response = webClient.get().uri("/cards/search?q={query}", query).retrieve().bodyToMono(ScryfallSearchResponse.class).block();
+            ScryfallSearchResponse response = webClient.get()
+                    .uri("/cards/search?q={query}", query)
+                    .retrieve()
+                    .bodyToMono(ScryfallSearchResponse.class)
+                    .block();
 
             if (response == null || response.getData() == null || response.getData().isEmpty()) {
-                log.warn("[SCRYFALL CLIENT] - No cards found for query='{}'", query);
+                log.warn("[SCRYFALL CLIENT] No cards found for query='{}'. Time taken: {} ms", query, System.currentTimeMillis() - startTime);
                 return List.of();
             }
 
-            log.info("[SCRYFALL CLIENT] - Found {} cards for query='{}'", response.getData().size(), query);
+            log.info("[SCRYFALL CLIENT] Found {} cards for query='{}'. Time taken: {} ms", response.getData().size(), query, System.currentTimeMillis() - startTime);
+            log.info("[SCRYFALL CLIENT] === Finished search on Scryfall API ===");
             return response.getData();
 
         } catch (org.springframework.web.reactive.function.client.WebClientResponseException.NotFound e) {
-            log.warn("[SCRYFALL CLIENT] - No cards found (404) for query='{}'. Details: {}", query, e.getResponseBodyAsString());
+            log.warn("[SCRYFALL CLIENT] No cards found (404) for query='{}'. Details: {}. Time taken: {} ms",
+                    query, e.getResponseBodyAsString(), System.currentTimeMillis() - startTime);
             return List.of();
         } catch (Exception e) {
-            log.error("[SCRYFALL CLIENT] - Error while querying Scryfall API for query='{}'. Cause: {}", query, e.getMessage(), e);
+            log.error("[SCRYFALL CLIENT] Error while querying Scryfall API for query='{}'. Cause: {}. Time taken: {} ms",
+                    query, e.getMessage(), System.currentTimeMillis() - startTime, e);
             return List.of();
         }
     }
