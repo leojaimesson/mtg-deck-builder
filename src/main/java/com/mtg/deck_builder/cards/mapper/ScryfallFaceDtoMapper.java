@@ -10,10 +10,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class FaceMapper {
-    private static final Logger log = LoggerFactory.getLogger(FaceMapper.class);
+public class ScryfallFaceDtoMapper {
+    private static final Logger log = LoggerFactory.getLogger(ScryfallFaceDtoMapper.class);
 
-    public static Face fromScryfallFaceDtoToDomain(ScryfallFaceDto dto) {
+    public static Face toDomain(ScryfallFaceDto dto) {
         String generatedId = HashUtil.generateId();
         log.info("[FACE MAPPER] Converting Face DTO '{}' (type='{}') with generated ID '{}'",
                 dto.getName(), dto.getTypeLine(), generatedId);
@@ -28,7 +28,7 @@ public class FaceMapper {
                 .power(dto.getPower())
                 .toughness(dto.getToughness())
                 .colors(dto.getColors())
-                .images(ImagesMapper.toDomain(dto.getImages()))
+                .images(ScryfallImagesDtoMapper.toDomain(dto.getImages()))
                 .build();
 
         log.info("[FACE MAPPER] Successfully converted Face DTO '{}' to domain Face with ID '{}'",
@@ -36,7 +36,7 @@ public class FaceMapper {
         return face;
     }
 
-    public static List<Face> fromScryfallFaceDtoToDomainList(List<ScryfallFaceDto> dtoList) {
+    public static List<Face> toDomainList(List<ScryfallFaceDto> dtoList) {
         log.info("[FACE MAPPER] === Starting conversion of {} Face DTOs to domain Faces ===",
                 dtoList == null ? 0 : dtoList.size());
 
@@ -46,7 +46,7 @@ public class FaceMapper {
         }
 
         List<Face> faces = dtoList.stream()
-                .map(FaceMapper::fromScryfallFaceDtoToDomain)
+                .map(ScryfallFaceDtoMapper::toDomain)
                 .collect(Collectors.toList());
 
         log.info("[FACE MAPPER] === Finished conversion. {} Faces created ===", faces.size());

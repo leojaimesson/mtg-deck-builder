@@ -10,11 +10,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class CardMapper {
+public class ScryfallCardDtoMapper {
 
-    private static final Logger log = LoggerFactory.getLogger(CardMapper.class);
+    private static final Logger log = LoggerFactory.getLogger(ScryfallCardDtoMapper.class);
 
-    public static Card fromScryfallCardDtoToDomain(ScryfallCardDto dto) {
+    public static Card toDomain(ScryfallCardDto dto) {
         String generatedId = HashUtil.generateId();
         log.info("[CARD MAPPER] Converting DTO '{}' to Card with generated ID '{}'", dto.getName(), generatedId);
 
@@ -32,15 +32,15 @@ public class CardMapper {
                 .toughness(dto.getToughness())
                 .colors(dto.getColors())
                 .colorIdentity(dto.getColorIdentity())
-                .faces(FaceMapper.fromScryfallFaceDtoToDomainList(dto.getFaces()))
-                .images(ImagesMapper.toDomain(dto.getImages()))
+                .faces(ScryfallFaceDtoMapper.toDomainList(dto.getFaces()))
+                .images(ScryfallImagesDtoMapper.toDomain(dto.getImages()))
                 .build();
 
         log.info("[CARD MAPPER] Successfully converted DTO '{}' to Card with ID '{}'", dto.getName(), card.getId());
         return card;
     }
 
-    public static List<Card> fromScryfallCardDtoToDomainList(List<ScryfallCardDto> cards) {
+    public static List<Card> toDomainList(List<ScryfallCardDto> cards) {
         log.info("[CARD MAPPER] === Starting conversion of {} DTOs to domain Cards ===", cards == null ? 0 : cards.size());
 
         if (cards == null || cards.isEmpty()) {
@@ -49,7 +49,7 @@ public class CardMapper {
         }
 
         List<Card> domainCards = cards.stream()
-                .map(CardMapper::fromScryfallCardDtoToDomain)
+                .map(ScryfallCardDtoMapper::toDomain)
                 .collect(Collectors.toList());
 
         log.info("[CARD MAPPER] === Finished conversion. {} Cards created ===", domainCards.size());

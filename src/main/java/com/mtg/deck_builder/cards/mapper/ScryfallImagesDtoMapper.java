@@ -5,8 +5,8 @@ import com.mtg.deck_builder.external.scryfall.dto.ScryfallImagesDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ImagesMapper {
-    private static final Logger log = LoggerFactory.getLogger(ImagesMapper.class);
+public class ScryfallImagesDtoMapper {
+    private static final Logger log = LoggerFactory.getLogger(ScryfallImagesDtoMapper.class);
 
     public static Images toDomain(ScryfallImagesDto dto) {
         log.info("[IMAGES MAPPER] === Starting conversion of ScryfallImagesDto ===");

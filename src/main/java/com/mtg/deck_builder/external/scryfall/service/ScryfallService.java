@@ -1,7 +1,7 @@
 package com.mtg.deck_builder.external.scryfall.service;
 
 import com.mtg.deck_builder.cards.entitie.Card;
-import com.mtg.deck_builder.cards.mapper.CardMapper;
+import com.mtg.deck_builder.cards.mapper.ScryfallCardDtoMapper;
 import com.mtg.deck_builder.external.scryfall.client.ScryfallClient;
 import com.mtg.deck_builder.external.scryfall.dto.ScryfallCardDto;
 import org.slf4j.Logger;
@@ -30,7 +30,7 @@ public class ScryfallService {
         log.info("[SCRYFALL SERVICE] Retrieved {} cards from ScryfallClient", dtoList.size());
 
         // Map DTOs to domain
-        List<Card> domainCards = CardMapper.fromScryfallCardDtoToDomainList(dtoList);
+        List<Card> domainCards = ScryfallCardDtoMapper.toDomainList(dtoList);
         log.info("[SCRYFALL SERVICE] Converted {} DTOs to domain Card objects. Time taken: {} ms",
                 domainCards.size(), System.currentTimeMillis() - startTime);
 
