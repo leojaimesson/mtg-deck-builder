@@ -1,6 +1,10 @@
 package com.mtg.deck_builder.cards.entitie;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.Instant;
 import java.util.List;
 
 @Entity
@@ -44,6 +48,14 @@ public class Card {
     @OneToMany(mappedBy = "card", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Face> faces;
 
+    @CreationTimestamp
+    @Column(name = "created_at", updatable = false)
+    private Instant createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private Instant updatedAt;
+
     protected Card() {
     }
 
@@ -63,6 +75,8 @@ public class Card {
         this.artist = builder.artist;
         this.images = builder.images;
         this.faces = builder.faces;
+        this.createdAt = builder.createdAt;
+        this.updatedAt = builder.updatedAt;
     }
 
     public String getId() { return id; }
@@ -80,6 +94,8 @@ public class Card {
     public String getArtist() { return artist; }
     public Images getImages() { return images; }
     public List<Face> getFaces() { return faces; }
+    public Instant getCreatedAt() { return createdAt; }
+    public Instant getUpdatedAt() { return updatedAt; }
 
     public static Builder builder() {
         return new Builder();
@@ -101,6 +117,8 @@ public class Card {
         private String artist;
         private Images images;
         private List<Face> faces;
+        private Instant createdAt;
+        private Instant updatedAt;
 
         public Builder id(String id) { this.id = id; return this; }
         public Builder scryfallId(String scryfallId) { this.scryfallId = scryfallId; return this; }
@@ -117,6 +135,8 @@ public class Card {
         public Builder artist(String artist) { this.artist = artist; return this; }
         public Builder images(Images images) { this.images = images; return this; }
         public Builder faces(List<Face> faces) { this.faces = faces; return this; }
+        public Builder creadetAt(Instant createdAt) { this.createdAt = createdAt; return this; }
+        public Builder updatedAt(Instant updatedAt) { this.updatedAt = updatedAt; return this; }
 
         public Card build() {
             return new Card(this);

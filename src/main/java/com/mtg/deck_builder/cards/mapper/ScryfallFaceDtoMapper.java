@@ -6,6 +6,7 @@ import com.mtg.deck_builder.external.scryfall.dto.ScryfallFaceDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,7 +18,7 @@ public class ScryfallFaceDtoMapper {
         String generatedId = HashUtil.generateId();
         log.info("[FACE MAPPER] Converting Face DTO '{}' (type='{}') with generated ID '{}'",
                 dto.getName(), dto.getTypeLine(), generatedId);
-
+        Instant now = Instant.now();
         Face face = Face.builder()
                 .id(generatedId)
                 .name(dto.getName())
@@ -29,6 +30,8 @@ public class ScryfallFaceDtoMapper {
                 .toughness(dto.getToughness())
                 .colors(dto.getColors())
                 .images(ScryfallImagesDtoMapper.toDomain(dto.getImages()))
+                .creadetAt(now)
+                .updatedAt(now)
                 .build();
 
         log.info("[FACE MAPPER] Successfully converted Face DTO '{}' to domain Face with ID '{}'",

@@ -5,6 +5,8 @@ spring:
     url: jdbc:sqlite:deck_builder_db.sqlite
     driver-class-name: org.sqlite.JDBC
   jpa:
+    properties:
+      hibernate.jdbc.time_zone: UTC
     hibernate:
       ddl-auto: update
     database-platform: org.hibernate.community.dialect.SQLiteDialect

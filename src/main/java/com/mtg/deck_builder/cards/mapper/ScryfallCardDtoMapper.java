@@ -6,6 +6,7 @@ import com.mtg.deck_builder.external.scryfall.dto.ScryfallCardDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,7 +18,7 @@ public class ScryfallCardDtoMapper {
     public static Card toDomain(ScryfallCardDto dto) {
         String generatedId = HashUtil.generateId();
         log.info("[CARD MAPPER] Converting DTO '{}' to Card with generated ID '{}'", dto.getName(), generatedId);
-
+        Instant now = Instant.now();
         Card card = Card.builder()
                 .id(generatedId)
                 .scryfallId(dto.getId())
@@ -34,6 +35,8 @@ public class ScryfallCardDtoMapper {
                 .colorIdentity(dto.getColorIdentity())
                 .faces(ScryfallFaceDtoMapper.toDomainList(dto.getFaces()))
                 .images(ScryfallImagesDtoMapper.toDomain(dto.getImages()))
+                .creadetAt(now)
+                .updatedAt(now)
                 .build();
 
         log.info("[CARD MAPPER] Successfully converted DTO '{}' to Card with ID '{}'", dto.getName(), card.getId());
