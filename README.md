@@ -1,21 +1,20 @@
 # DeckBuilder API
 
-DeckBuilder API é um serviço para busca, cadastro e gerenciamento de cartas de Magic: The Gathering.  
-O sistema permite que os usuários busquem cartas, salvem no banco local e montem decks personalizados.
+DeckBuilder API is a service for searching, registering, and managing Magic The Gathering cards.  
+The system allows users to search for cards, save them in the local database, and build custom decks.
 
 ---
+## Features
 
-## Funcionalidades
+<details>
+<summary><strong>Card Search<strong></summary>
 
-- Buscar cartas por **nome** ou **descrição**.
-- Consultar e persistir cartas no banco de dados local.
-- Fallback automático para a API do [Scryfall](https://scryfall.com/) quando cartas não estão no banco.
+- Search cards by **name** or **description**.
+- Query and persist cards in the local database.
+- Automatic fallback to the [Scryfall](https://scryfall.com/) API when cards are not found locally.
 
----
 
-## Fluxo de Busca de Cartas
-
-O fluxo de busca da API é ilustrado abaixo:
+The API's card search flow is illustrated below:
 
 ```mermaid
 flowchart TD
@@ -36,3 +35,4 @@ flowchart TD
 
     G -->|No| K["DeckBuilder API returns empty list to User"]
 ```
+</details>
