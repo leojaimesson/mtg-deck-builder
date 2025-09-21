@@ -1,0 +1,38 @@
+name: Deploy Swagger UI to GitHub Pages
+
+# Trigger workflow on push to main branch
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Set up JDK 24
+      - name: Set up JDK 24
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 24
+
+      # Make the shell script executable
+      - name: Make shell script executable
+        run: chmod +x ./generate-swagger.sh
+
+      # Run the shell script to generate Swagger UI
+      - name: Generate Swagger UI
+        run: ./generate-swagger.sh
+
+      # Deploy the docs folder to GitHub Pages
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v6
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs
