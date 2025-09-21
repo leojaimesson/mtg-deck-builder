@@ -1,0 +1,188 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "OpenAPI definition",
+    "version": "v0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "Generated server url"
+    }
+  ],
+  "paths": {
+    "/cards": {
+      "get": {
+        "tags": [
+          "card-controller"
+        ],
+        "operationId": "getCardById",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CardResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CardResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "scryfallId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "manaCost": {
+            "type": "string"
+          },
+          "totalManaCost": {
+            "type": "string"
+          },
+          "power": {
+            "type": "string"
+          },
+          "toughness": {
+            "type": "string"
+          },
+          "colors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "colorIdentity": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "rarity": {
+            "type": "string"
+          },
+          "artist": {
+            "type": "string"
+          },
+          "images": {
+            "$ref": "#/components/schemas/ImagesResponseDto"
+          },
+          "faces": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FaceResponseDto"
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "FaceResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "manaCost": {
+            "type": "string"
+          },
+          "power": {
+            "type": "string"
+          },
+          "toughness": {
+            "type": "string"
+          },
+          "colors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "artist": {
+            "type": "string"
+          },
+          "images": {
+            "$ref": "#/components/schemas/ImagesResponseDto"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "ImagesResponseDto": {
+        "type": "object",
+        "properties": {
+          "small": {
+            "type": "string"
+          },
+          "normal": {
+            "type": "string"
+          },
+          "large": {
+            "type": "string"
+          },
+          "png": {
+            "type": "string"
+          },
+          "artCrop": {
+            "type": "string"
+          },
+          "borderCrop": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
