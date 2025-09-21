@@ -2,7 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.5.5'
 	id 'io.spring.dependency-management' version '1.1.7'
-    id "org.springdoc.openapi-gradle-plugin" version "1.6.0"
+    id "org.springdoc.openapi-gradle-plugin" version "1.9.0"
 }
 
 group = 'com.mtg'
@@ -16,10 +16,15 @@ java {
 }
 
 openApi {
+    apiDocsUrl.set("http://localhost:8080/v3/api-docs")
     outputDir.set(layout.buildDirectory.dir("swagger"))
     outputFileName.set("openapi.json")
-    waitTimeInSeconds.set(0)
+    waitTimeInSeconds.set(10)
+    customBootRun {
+        args.set(["--spring.profiles.active=dev"])
+    }
 }
+
 
 repositories {
 	mavenCentral()
@@ -38,3 +43,4 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+

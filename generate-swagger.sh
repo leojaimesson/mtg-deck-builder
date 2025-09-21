@@ -13,11 +13,13 @@ echo "[1/5] Building project..."
 
 # Generate OpenAPI JSON via Gradle plugin
 echo "[2/5] Generating openapi.json..."
-./gradlew openApiGenerate
+./gradlew generateOpenApiDocs
 
 # Prepare docs folder
 echo "[3/5] Preparing docs folder..."
 mkdir -p docs
+
+# The plugin 1.6.0 generates JSON in build/swagger by default
 cp build/swagger/openapi.json docs/openapi.json
 
 # Download Swagger UI dist
