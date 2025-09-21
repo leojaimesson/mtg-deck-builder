@@ -2,8 +2,9 @@
 set -e
 
 # Configurations
-SWAGGER_VERSION="5.0.1"
-SWAGGER_UI_DIST_URL="https://github.com/swagger-api/swagger-ui/releases/download/v$SWAGGER_VERSION/swagger-ui-$SWAGGER_VERSION.zip"
+SWAGGER_VERSION="5.29.0"
+SWAGGER_UI_DIST_URL="https://github.com/swagger-api/swagger-ui/archive/refs/tags/v$SWAGGER_VERSION.zip"
+
 
 echo "===== Generating Swagger UI (optimized) ====="
 
@@ -25,9 +26,9 @@ cp build/swagger/openapi.json docs/openapi.json
 # Download Swagger UI dist
 echo "[4/5] Downloading Swagger UI dist v$SWAGGER_VERSION..."
 TMP_DIR=$(mktemp -d)
-curl -L "$SWAGGER_UI_DIST_URL" -o "$TMP_DIR/swagger-ui.zip"
-unzip -q "$TMP_DIR/swagger-ui.zip" -d "$TMP_DIR"
-cp -r "$TMP_DIR/dist/"* docs/
+curl -L "$SWAGGER_UI_DIST_URL" -o "$TMP_DIR/swagger-ui-$SWAGGER_VERSION.zip"
+unzip -q "$TMP_DIR/swagger-ui-$SWAGGER_VERSION.zip" -d "$TMP_DIR"
+cp -r "$TMP_DIR/swagger-ui-$SWAGGER_VERSION/dist/"* docs/
 
 # Create index.html and swagger-initializer.js
 echo "[5/5] Creating index.html and swagger-initializer.js..."
