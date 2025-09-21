@@ -18,28 +18,21 @@ O sistema permite que os usuários busquem cartas, salvem no banco local e monte
 O fluxo de busca da API é ilustrado abaixo:
 
 ```mermaid
-sequenceDiagram
-    autonumber
-    participant User as "User / Client"
-    participant API as "DeckBuilder API"
-    participant DB as "Local Database"
-    participant Scryfall as "Scryfall API"
+flowchart TD
+    A["User (Client) - Search cards (query)"] --> B["DeckBuilder API receives request"]
 
-    User->>API: Search cards (query)
-    API->>DB: Search cards by name or description
-    alt Cards found locally
-        DB-->>API: Return cards
-        API-->>User: Return cards
-    else No cards found locally
-        DB-->>API: Empty result
-        API->>Scryfall: Search cards
-        alt Scryfall returns cards
-            Scryfall-->>API: Return cards
-            API->>DB: Save new cards
-            DB-->>API: Save complete
-            API-->>User: Return cards
-        else Scryfall returns nothing
-            Scryfall-->>API: Empty result
-            API-->>User: Return empty list
-        end
-    end
+    B --> C{Search in Local Database?}
+    
+    C -->|Cards found| D["Return cards from DB"]
+    D --> E["DeckBuilder API returns cards to User"]
+
+    C -->|No cards found| F["DeckBuilder API queries Scryfall API"]
+
+    F --> G{Scryfall returns cards?}
+    
+    G -->|Yes| H["Return cards from Scryfall"]
+    H --> I["Save new cards in Local Database"]
+    I --> J["DeckBuilder API returns cards to User"]
+
+    G -->|No| K["DeckBuilder API returns empty list to User"]
+```
