@@ -78,6 +78,11 @@ public class Face {
     public Card getCard() { return card; }
     public Instant getCreatedAt() { return createdAt; }
     public Instant getUpdatedAt() { return updatedAt; }
+    public void setCard(Card card) {
+        if (card.getId() != null) {
+            this.card = card;
+        }
+    }
 
     public static Builder builder() {
         return new Builder();

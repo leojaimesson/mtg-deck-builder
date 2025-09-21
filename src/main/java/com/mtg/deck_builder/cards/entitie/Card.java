@@ -134,7 +134,13 @@ public class Card {
         public Builder rarity(String rarity) { this.rarity = rarity; return this; }
         public Builder artist(String artist) { this.artist = artist; return this; }
         public Builder images(Images images) { this.images = images; return this; }
-        public Builder faces(List<Face> faces) { this.faces = faces; return this; }
+        public Builder faces(List<Face> faces) {
+            if (faces != null) {
+                faces.forEach(face -> face.setCard(new Card(this)));
+            }
+            this.faces = faces;
+            return this;
+        }
         public Builder creadetAt(Instant createdAt) { this.createdAt = createdAt; return this; }
         public Builder updatedAt(Instant updatedAt) { this.updatedAt = updatedAt; return this; }
 
