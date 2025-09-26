@@ -18,21 +18,21 @@ echo "[2/5] Generating openapi.json..."
 
 # Prepare docs folder
 echo "[3/5] Preparing docs folder..."
-mkdir -p docs
+mkdir -p ../docs
 
 # The plugin 1.6.0 generates JSON in build/swagger by default
-cp build/swagger/openapi.json docs/openapi.json
+cp build/swagger/openapi.json ../docs/openapi.json
 
 # Download Swagger UI dist
 echo "[4/5] Downloading Swagger UI dist v$SWAGGER_VERSION..."
 TMP_DIR=$(mktemp -d)
 curl -L "$SWAGGER_UI_DIST_URL" -o "$TMP_DIR/swagger-ui-$SWAGGER_VERSION.zip"
 unzip -q "$TMP_DIR/swagger-ui-$SWAGGER_VERSION.zip" -d "$TMP_DIR"
-cp -r "$TMP_DIR/swagger-ui-$SWAGGER_VERSION/dist/"* docs/
+cp -r "$TMP_DIR/swagger-ui-$SWAGGER_VERSION/dist/"* ../docs/
 
 # Create index.html and swagger-initializer.js
 echo "[5/5] Creating index.html and swagger-initializer.js..."
-cat > docs/index.html <<EOF
+cat > ../docs/index.html <<EOF
 <!-- HTML for static distribution bundle build -->
 <!DOCTYPE html>
 <html lang="en">
@@ -54,7 +54,7 @@ cat > docs/index.html <<EOF
 </html>
 EOF
 
-cat > docs/swagger-initializer.js <<EOF
+cat > ..docs/swagger-initializer.js <<EOF
 window.onload = function() {
   window.ui = SwaggerUIBundle({
     url: "openapi.json",
