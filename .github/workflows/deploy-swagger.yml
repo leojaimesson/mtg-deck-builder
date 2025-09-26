@@ -1,6 +1,5 @@
 name: Deploy Swagger UI to GitHub Pages
 
-# Trigger workflow on push to main branch
 on:
   push:
     branches:
@@ -26,11 +25,13 @@ jobs:
 
       # Make the shell script executable
       - name: Make shell script executable
-        run: chmod +x ./app/generate-swagger.sh
+        working-directory: ./app
+        run: chmod +x ./generate-swagger.sh
 
       # Run the shell script to generate Swagger UI
       - name: Generate Swagger UI
-        run: ./app/generate-swagger.sh
+        working-directory: ./app
+        run: ./generate-swagger.sh
 
       # Deploy the docs folder to GitHub Pages
       - name: Deploy to GitHub Pages
