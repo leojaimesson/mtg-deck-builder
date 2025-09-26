@@ -26,15 +26,15 @@ jobs:
 
       # Make the shell script executable
       - name: Make shell script executable
-        run: chmod +x ./generate-swagger.sh
+        run: chmod +x ./app/generate-swagger.sh
 
       # Run the shell script to generate Swagger UI
       - name: Generate Swagger UI
-        run: ./generate-swagger.sh
+        run: ./app/generate-swagger.sh
 
       # Deploy the docs folder to GitHub Pages
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs
+          publish_dir: ./app/docs
