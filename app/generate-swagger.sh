@@ -5,7 +5,7 @@ set -e
 SWAGGER_VERSION="5.29.0"
 SWAGGER_UI_DIST_URL="https://github.com/swagger-api/swagger-ui/archive/refs/tags/v$SWAGGER_VERSION.zip"
 
-
+ls -la
 echo "===== Generating Swagger UI (optimized) ====="
 
 # Build the project
