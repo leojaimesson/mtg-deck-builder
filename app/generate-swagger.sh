@@ -10,29 +10,29 @@ echo "===== Generating Swagger UI (optimized) ====="
 
 # Build the project
 echo "[1/5] Building project..."
-./gradlew build
+./app/gradlew build
 
 # Generate OpenAPI JSON via Gradle plugin
 echo "[2/5] Generating openapi.json..."
-./gradlew generateOpenApiDocs
+./app/gradlew generateOpenApiDocs
 
 # Prepare docs folder
 echo "[3/5] Preparing docs folder..."
-mkdir -p ../docs
+mkdir -p app/docs
 
 # The plugin 1.6.0 generates JSON in build/swagger by default
-cp build/swagger/openapi.json ../docs/openapi.json
+cp app/build/swagger/openapi.json app/docs/openapi.json
 
 # Download Swagger UI dist
 echo "[4/5] Downloading Swagger UI dist v$SWAGGER_VERSION..."
 TMP_DIR=$(mktemp -d)
 curl -L "$SWAGGER_UI_DIST_URL" -o "$TMP_DIR/swagger-ui-$SWAGGER_VERSION.zip"
 unzip -q "$TMP_DIR/swagger-ui-$SWAGGER_VERSION.zip" -d "$TMP_DIR"
-cp -r "$TMP_DIR/swagger-ui-$SWAGGER_VERSION/dist/"* ../docs/
+cp -r "$TMP_DIR/swagger-ui-$SWAGGER_VERSION/dist/"* app/docs/
 
 # Create index.html and swagger-initializer.js
 echo "[5/5] Creating index.html and swagger-initializer.js..."
-cat > ../docs/index.html <<EOF
+cat > docs/index.html <<EOF
 <!-- HTML for static distribution bundle build -->
 <!DOCTYPE html>
 <html lang="en">
@@ -54,7 +54,7 @@ cat > ../docs/index.html <<EOF
 </html>
 EOF
 
-cat > ..docs/swagger-initializer.js <<EOF
+cat > app/docs/swagger-initializer.js <<EOF
 window.onload = function() {
   window.ui = SwaggerUIBundle({
     url: "openapi.json",
@@ -72,7 +72,7 @@ window.onload = function() {
 };
 EOF
 
-echo "Swagger UI generation completed! docs/ folder is ready."
+echo "Swagger UI generation completed! app/docs/ folder is ready."
 
 # Clean up temporary files
 rm -rf "$TMP_DIR"
