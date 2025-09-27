@@ -35,7 +35,6 @@ jobs:
 
       # Deploy the docs folder to GitHub Pages
       - name: Deploy to GitHub Pages
-        working-directory: ./app
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
