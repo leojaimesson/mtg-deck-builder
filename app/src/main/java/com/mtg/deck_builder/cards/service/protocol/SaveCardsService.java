@@ -5,5 +5,5 @@ import com.mtg.deck_builder.cards.entitie.Card;
 import java.util.List;
 
 public interface SaveCardsService {
-    public void exec(List<Card> cards);
+    public List<Card> exec(List<Card> cards);
 }

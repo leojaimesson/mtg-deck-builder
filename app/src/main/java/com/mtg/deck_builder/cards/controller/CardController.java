@@ -3,6 +3,7 @@ package com.mtg.deck_builder.cards.controller;
 import com.mtg.deck_builder.cards.dto.response.CardResponseDto;
 import com.mtg.deck_builder.cards.entitie.Card;
 import com.mtg.deck_builder.cards.mapper.CardMapper;
+import com.mtg.deck_builder.cards.service.protocol.SaveCardsService;
 import com.mtg.deck_builder.cards.service.protocol.SearchLocalCardsService;
 import com.mtg.deck_builder.cards.service.protocol.SearchScryfallCardsService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,13 +13,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.*;
 
 @RestController
 @RequestMapping("/cards")
@@ -28,10 +28,12 @@ public class CardController {
 
     private final SearchLocalCardsService searchLocalCardsService;
     private final SearchScryfallCardsService searchScryfallCardsService;
+    private final SaveCardsService saveCardsService;
 
-    public CardController(SearchLocalCardsService searchLocalCardsService, SearchScryfallCardsService searchScryfallCardsService) {
+    public CardController(SearchLocalCardsService searchLocalCardsService, SearchScryfallCardsService searchScryfallCardsService, SaveCardsService saveCardsService) {
         this.searchLocalCardsService = searchLocalCardsService;
         this.searchScryfallCardsService = searchScryfallCardsService;
+        this.saveCardsService = saveCardsService;
     }
 
     @GetMapping
@@ -63,15 +65,24 @@ public class CardController {
                     ? searchScryfallCardsService.exec(query)
                     : List.of();
 
+            List<Card> storedScryfallCards = saveCardsService.exec(scryfallCards);
+
+
             Map<String, Card> cardMap = new HashMap<>();
-            localCards.forEach(card -> cardMap.put(card.getScryfallId().toLowerCase(), card));
-            scryfallCards.forEach(card -> cardMap.putIfAbsent(card.getScryfallId().toLowerCase(), card));
+
+            if (!localCards.isEmpty()) {
+                localCards.forEach(card -> cardMap.put(card.getScryfallId().toLowerCase(), card));
+            }
+            if (!storedScryfallCards.isEmpty()) {
+                storedScryfallCards.forEach(card -> cardMap.put(card.getScryfallId().toLowerCase(), card));
+            }
 
             List<Card> finalCards = new ArrayList<>(cardMap.values());
 
-            List<CardResponseDto> response = finalCards.stream()
-                    .map(CardMapper::toResponseDto)
-                    .toList();
+            List<CardResponseDto> response = finalCards
+                        .stream()
+                        .map(CardMapper::toResponseDto)
+                        .toList();
 
             log.info("[CARD CONTROLLER] Successfully retrieved {} cards for query='{}'", response.size(), query);
 
