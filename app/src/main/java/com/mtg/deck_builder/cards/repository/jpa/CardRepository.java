@@ -1,4 +1,4 @@
-package com.mtg.deck_builder.cards.repository;
+package com.mtg.deck_builder.cards.repository.jpa;
 
 import com.mtg.deck_builder.cards.entitie.Card;
 import org.springframework.data.jpa.repository.JpaRepository;

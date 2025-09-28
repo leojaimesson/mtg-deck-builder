@@ -1,8 +1,10 @@
 package com.mtg.deck_builder.cards.controller;
 
 import com.mtg.deck_builder.cards.dto.response.CardResponseDto;
+import com.mtg.deck_builder.cards.entitie.Card;
 import com.mtg.deck_builder.cards.mapper.CardMapper;
-import com.mtg.deck_builder.cards.service.CardService;
+import com.mtg.deck_builder.cards.service.protocol.SearchLocalCardsService;
+import com.mtg.deck_builder.cards.service.protocol.SearchScryfallCardsService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -12,19 +14,24 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/cards")
 @Tag(name = "Cards", description = "Endpoints related to Magic: The Gathering cards")
 public class CardController {
-
     private static final Logger log = LoggerFactory.getLogger(CardController.class);
 
-    private final CardService service;
+    private final SearchLocalCardsService searchLocalCardsService;
+    private final SearchScryfallCardsService searchScryfallCardsService;
 
-    public CardController(CardService service) {
-        this.service = service;
+    public CardController(SearchLocalCardsService searchLocalCardsService, SearchScryfallCardsService searchScryfallCardsService) {
+        this.searchLocalCardsService = searchLocalCardsService;
+        this.searchScryfallCardsService = searchScryfallCardsService;
     }
 
     @GetMapping
@@ -40,22 +47,40 @@ public class CardController {
                     description = "Search query for the card (full or partial name).",
                     example = "Lightning Bolt"
             )
-            @RequestParam String query
+            @RequestParam String query,
+            @Parameter(
+                    description = "If true, also fetches cards from Scryfall even if found locally.",
+                    example = "false"
+            )
+            @RequestParam(required = false, defaultValue = "false") boolean searchNewCards
     ) {
-        log.info("[CARD CONTROLLER] Received request to search cards with query='{}'", query);
+        log.info("[CARD CONTROLLER] Received request to search cards with query='{}', searchNewCards={}", query, searchNewCards);
 
         try {
-            List<CardResponseDto> results = service.searchCards(query).stream()
+            List<Card> localCards = searchLocalCardsService.exec(query);
+
+            List<Card> scryfallCards = (searchNewCards || localCards.isEmpty())
+                    ? searchScryfallCardsService.exec(query)
+                    : List.of();
+
+            Map<String, Card> cardMap = new HashMap<>();
+            localCards.forEach(card -> cardMap.put(card.getScryfallId().toLowerCase(), card));
+            scryfallCards.forEach(card -> cardMap.putIfAbsent(card.getScryfallId().toLowerCase(), card));
+
+            List<Card> finalCards = new ArrayList<>(cardMap.values());
+
+            List<CardResponseDto> response = finalCards.stream()
                     .map(CardMapper::toResponseDto)
                     .toList();
 
-            log.info("[CARD CONTROLLER] Successfully retrieved {} cards for query='{}'", results.size(), query);
+            log.info("[CARD CONTROLLER] Successfully retrieved {} cards for query='{}'", response.size(), query);
 
-            return results;
+            return response;
 
         } catch (Exception e) {
             log.error("[CARD CONTROLLER] Error occurred while searching cards with query='{}'", query, e);
             throw e;
         }
     }
+
 }
