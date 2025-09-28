@@ -36,6 +36,17 @@
               "type": "string"
             },
             "example": "Lightning Bolt"
+          },
+          {
+            "name": "searchNewCards",
+            "in": "query",
+            "description": "If true, also fetches cards from Scryfall even if found locally.",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "example": false
           }
         ],
         "responses": {
