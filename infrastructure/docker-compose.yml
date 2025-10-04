@@ -1,0 +1,70 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres:17
+    container_name: mtg_deck_builder_database
+    environment:
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_NAME}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - mtg_network
+
+  flyway:
+    container_name: mtg_deck_builder_migrations
+    image: flyway/flyway:11.12.0
+    command: ["migrate"]
+    depends_on:
+      - postgres
+    environment:
+      - FLYWAY_URL=jdbc:postgresql://postgres:5432/${DATABASE_NAME}
+      - FLYWAY_USER=${DATABASE_USER}
+      - FLYWAY_PASSWORD=${DATABASE_PASSWORD}
+      - FLYWAY_LOCATIONS=filesystem:/db/migration
+    volumes:
+      - ../database/migration:/db/migration
+    networks:
+      - mtg_network
+
+  rabbitmq:
+    image: rabbitmq:4.1-management
+    container_name: mtg_deck_builder_rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+      RABBITMQ_DEFAULT_VHOST: ${RABBITMQ_VHOST}
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+    depends_on:
+      - postgres
+    networks:
+      - mtg_network
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: mtg_deck_builder_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
+    ports:
+      - "8080:80"
+    depends_on:
+      - postgres
+    networks:
+      - mtg_network
+
+volumes:
+  postgres-data:
+  rabbitmq-data:
+
+networks:
+  mtg_network:
+    driver: bridge
