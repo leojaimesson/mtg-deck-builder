@@ -3,6 +3,7 @@ package com.mtg.deck_builder.cards.controller;
 import com.mtg.deck_builder.cards.dto.response.CardResponseDto;
 import com.mtg.deck_builder.cards.entitie.Card;
 import com.mtg.deck_builder.cards.mapper.CardMapper;
+import com.mtg.deck_builder.cards.queue.producer.CardProducerService;
 import com.mtg.deck_builder.cards.service.protocol.SaveCardsService;
 import com.mtg.deck_builder.cards.service.protocol.SearchLocalCardsService;
 import com.mtg.deck_builder.cards.service.protocol.SearchScryfallCardsService;
@@ -28,12 +29,12 @@ public class CardController {
 
     private final SearchLocalCardsService searchLocalCardsService;
     private final SearchScryfallCardsService searchScryfallCardsService;
-    private final SaveCardsService saveCardsService;
+    private final CardProducerService cardProducerService;
 
-    public CardController(SearchLocalCardsService searchLocalCardsService, SearchScryfallCardsService searchScryfallCardsService, SaveCardsService saveCardsService) {
+    public CardController(SearchLocalCardsService searchLocalCardsService, SearchScryfallCardsService searchScryfallCardsService, CardProducerService cardProducerService) {
         this.searchLocalCardsService = searchLocalCardsService;
         this.searchScryfallCardsService = searchScryfallCardsService;
-        this.saveCardsService = saveCardsService;
+        this.cardProducerService = cardProducerService;
     }
 
     @GetMapping
@@ -65,16 +66,14 @@ public class CardController {
                     ? searchScryfallCardsService.exec(query)
                     : List.of();
 
-            List<Card> storedScryfallCards = saveCardsService.exec(scryfallCards);
-
-
             Map<String, Card> cardMap = new HashMap<>();
 
             if (!localCards.isEmpty()) {
                 localCards.forEach(card -> cardMap.put(card.getScryfallId().toLowerCase(), card));
             }
-            if (!storedScryfallCards.isEmpty()) {
-                storedScryfallCards.forEach(card -> cardMap.put(card.getScryfallId().toLowerCase(), card));
+            if (!scryfallCards.isEmpty()) {
+                cardProducerService.sendCardMessage(scryfallCards);
+                scryfallCards.forEach(card -> cardMap.put(card.getScryfallId().toLowerCase(), card));
             }
 
             List<Card> finalCards = new ArrayList<>(cardMap.values());
