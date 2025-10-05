@@ -24,35 +24,6 @@ The project uses Docker Compose to manage services for development:
 * **PostgreSQL** (port 5432)
 * **Flyway** for migrations
 * **RabbitMQ** (AMQP port 5672 and management console 15672)
-* **pgAdmin** (web interface on port 8080)
-
-### Setup `.env`
-
-Create `.env` from `.env.example` before running Docker:
-
-```bash
-cp .env.example .env
-```
-
-All variables are mandatory.
-
-Example `.env`:
-
-```dotenv
-# PostgreSQL
-DATABASE_USER=root
-DATABASE_PASSWORD=root
-DATABASE_NAME=mtg_deck_builder_database
-
-# RabbitMQ
-RABBITMQ_USER=guest
-RABBITMQ_PASSWORD=guest
-RABBITMQ_VHOST=/
-
-# pgAdmin
-PGADMIN_EMAIL=admin@example.com
-PGADMIN_PASSWORD=admin
-```
 
 ### Start Docker Compose
 
@@ -78,9 +49,3 @@ docker-compose down -v
 
   * Username: `${RABBITMQ_USER}`
   * Password: `${RABBITMQ_PASSWORD}`
-
-* **pgAdmin**: [http://localhost:8080](http://localhost:8080)
-
-  * Email: `${PGADMIN_EMAIL}`
-  * Password: `${PGADMIN_PASSWORD}`
-  * Add a server with Host: `postgres`, Port: `5432`, Username: `${DATABASE_USER}`, Password: `${DATABASE_PASSWORD}`
