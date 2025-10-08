@@ -6,7 +6,7 @@ DeckBuilder is an app for managing Magic The Gathering cards, combining the API,
 
 * `server/` - Contains the **DeckBuilder API** for card search and management.
 * `database/` - Contains the **database schema** and migration scripts managed by Flyway.
-* `infrastructure/` - Contains Docker Compose setup for PostgreSQL, RabbitMQ, and pgAdmin.
+* `infrastructure/` - Contains Docker Compose setup for PostgreSQL, and RabbitMQ.
 * `documents/` - Contains project documentation including database design, feature specifications, and related materials.
 
 ---
